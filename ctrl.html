@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!--?xml version="1.0"?-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <style media="screen">
+            section {
+                position: absolute; top:0; bottom:0; left:0; right:0;
+                overflow: hidden;
+            }
+            
+            html, body
+            {
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+                margin-top: 0px;
+                margin-left: 0px;
+                pointer-events: auto;
+                background-color: gray;
+                touch-action: none;
+                user-select: none;
+            }
+
+            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
+            a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
+            a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
+        </style>
+        
+        <script>
+            function setDesign(pr) {
+                var viewport = document.querySelector("meta[name=viewport]");
+                if (!viewport){
+                    viewport=document.createElement('meta');
+                    viewport.name = "viewport";
+                    document.getElementsByTagName('head')[0].appendChild(viewport);
+                }
+                var sc = 1 / pr;
+                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+            }
+            
+            setDesign(window.devicePixelRatio);
+        </script>
+        <script src="init-ctrl.js"></script>
+        <script src="src/exp-log.js"></script>
+    </head>
+    <body onload="input.focus();">
+      <section>
+        <div id="divContainer" onclick="input.focus();" style="visibility: hidden; overflow-y: scroll; position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; border-sytle: none; padding:0; margin:0;">
+        <div id="divContainer1" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; border-sytle: none; padding:0; margin:0;">
+            <!--label id="lo" style="font-family: 'monospace';">output:</label><br/-->
+            <textarea id="output" spellcheck="false" wrap="off" rows="1" style="overflow: hidden; width: 100%; height: auto; resize: none; outline: none; box-sizing: border-box; padding: 0; margin: 0; font-family: 'monospace'; font-size: 12px;" readonly></textarea>
+            <br/>
+            <label id="li" style="width: 70px; vertical-align: top; font-family: 'monospace'; font-size: 12px;">input:> </label>
+            <textarea id="input" spellcheck="false" wrap="off" rows="1" style="overflow: hidden; height: auto; /*min-height: 12px; */width:0%; resize: none; outline: none; box-sizing: border-box; padding: 0; margin: 0; font-family: 'monospace'; font-size: 12px;"></textarea>
+        </div>
+        </div>
+        
+        <script>
+            rules = [
+                "RULESET",
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "s-expr-ws"]],
+                    ["DIS", ["SEQ", "goal"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "ws", "s-expr", "ws"]],
+                    ["DIS", ["SEQ", "s-expr-ws"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "primary"]],
+                    ["DIS", ["SEQ", "s-expr"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "primary", "ws", "s-expr"]],
+                    ["DIS", ["SEQ", "s-expr"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "\"(\"", "ws", "\")\""]],
+                    ["DIS", ["SEQ", "primary"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "/[^\\s();\"]+/"]],
+                    ["DIS", ["SEQ", "primary"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "/\"([^\"\\\\\\n]|(\\\\.))*\"/"]],
+                    ["DIS", ["SEQ", "primary"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "\"(\"", "s-expr-ws", "\")\""]],
+                    ["DIS", ["SEQ", "primary"]]
+                ],
+                [
+                    "IMP",
+                    ["CON", ["SEQ", "/((\\s+)|(;((.*\\n)|(.*$))))*/"]],
+                    ["DIS", ["SEQ", "ws"]]
+                ]
+            ];
+
+            var error;
+            var pad = false;
+            function getDesign() {
+                var design;
+                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
+                    design = 'touch';
+                 } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'tablet';
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                }
+                return design;
+            }
+            
+            var hist = [];
+            var histptr = 0;
+
+            function onkd (e) {
+                if (e && e.key === "ArrowUp" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+                    if (histptr > 0) {
+                        histptr--;
+                        input.value = hist[histptr];
+                    }
+                    
+                    e.preventDefault();
+                    oninp ();
+                    input.setSelectionRange(input.value.length, input.value.length);
+
+                } else if (e && e.key === "ArrowDown" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+                    if (histptr < hist.length - 1) {
+                        histptr++;
+                        input.value = hist[histptr];
+
+                    } else {
+                        input.value = "";
+                        histptr = hist.length;
+                    }
+
+                    e.preventDefault ();
+                    oninp ();
+                    input.setSelectionRange(input.value.length, input.value.length);
+
+                } else if (e && e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+                    if (input.value !== "") {
+                        hist.push (input.value);
+                        histptr = hist.length;
+                    }
+                    
+                    output.value += String.fromCharCode(13) + "input:> " + input.value;
+                    if (input.value.trim() !== "") {
+                        parsed = parser.getParseTree (rules, input.value);
+                        sexpr = parsed.sexpr;
+                        if (sexpr) {
+                            output.value += String.fromCharCode(13) + "OK";
+                            window.parent.frames[1].postMessage(JSON.stringify (sexpr[1]), "*");
+                            
+                        } else {
+                            output.value += String.fromCharCode(13) + "Error";
+                        }
+                    }
+                    
+                    input.value = "";
+                    input.scrollTop = input.scrollHeight;
+                    
+                    e.preventDefault();
+                    oninp ();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
+            }
+                
+            function oninp () {
+                input.style.height = "auto";
+                output.style.height = "auto";
+
+                input.style.height = input.scrollHeight + 15 + "px";
+                output.style.height = output.scrollHeight + "px";
+
+                input.style.width = divContainer.clientWidth - 70 + "px";
+                output.style.width = divContainer.clientWidth + "px";
+
+                divContainer1.height = input.scrollHeight + output.scrollHeight + "px";
+                
+                divContainer.scrollTop = divContainer.scrollHeight;
+            }
+
+            function setSize () {
+                divContainer.style.top = env.shadowRadius + "px";
+                divContainer.style.left = env.shadowRadius + "px";
+                divContainer.style.bottom = env.shadowRadius + "px";
+                divContainer.style.right = env.shadowRadius + "px";
+                divContainer.style.backgroundColor = env.ctrlColor;
+                divContainer.style.boxShadow = "0px 0px " + env.shadowRadius + "px " + env.shadowColor; 
+
+                output.style.backgroundColor = env.ctrlColor;
+                output.style.color = env.textColor;
+                output.style.border = "0px solid " + env.textColor;
+                
+                li = document.getElementById("li");
+                li.style.color = env.textColor;
+                input.style.backgroundColor = env.ctrlColor;
+                input.style.color = env.textColor;
+                input.style.border = "0px solid " + env.textColor;
+                
+                
+                input.addEventListener("keydown", onkd, false);
+                input.addEventListener("input", oninp, false);
+                
+                oninp ();
+            }
+
+            wonload = function () {
+                setSize ();
+                divContainer.style.visibility = "visible";
+
+                var resizeId;
+                window.addEventListener('resize', function () {
+                    divContainer.style.visibility = "hidden";
+                    
+                    clearTimeout(resizeId);
+                    resizeId = setTimeout(function () {
+                        setSize ();
+                        divContainer.style.visibility = "visible";
+                        
+                    }, 500);
+                });
+            };
+            
+            function setupEnv (data) {
+                if (data["shadow-radius"]) {
+                    var sradius = parseFloat (data["shadow-radius"]);
+                    
+                } else {
+                    sradius = 0;
+                }
+                
+                return {
+                    ctrlColor: data["ctrl-color"],
+                    textColor: data["text-color"],
+                    backColor: data["background-color"],
+                    shadowRadius: sradius,
+                    shadowColor: data["shadow-color"],
+                }
+            }
+
+            var divContainer = document.getElementById ("divContainer");
+            var divContainer1 = document.getElementById ("divContainer");
+            var input = document.getElementById ("input");
+            var output = document.getElementById ("output");
+            
+            env = setupEnv (init);
+            document.body.style.backgroundColor = env.backColor;
+            window.addEventListener("load", wonload ());
+            
+input.value = ""
+output.value = "";
+oninp ();
+hist.push (
+`( 
+    fauna-feeding-tactics
+    (
+        cell-growing-tech
+        (condition "pray is alive")
+        (consequence "pray is alive")
+    )
+    (
+        scavenging
+        (condition "pray is dead")
+        (consequence "pray is dead")
+    )
+    (
+        browsing
+        (condition "pray is alive")
+        (consequence "pray is alive")
+    )
+    (
+        parasitism
+        (condition "pray is alive")
+        (consequence "pray is alive")
+    )
+    (
+        grazing
+        (condition "pray is alive")
+        (consequence "pray is dead")
+    )
+    (
+        predation
+        (condition "pray is alive")
+        (consequence "pray is dead")
+    )
+    (
+        parasitoidism
+        (condition "pray is alive")
+        (consequence "pray is dead")
+    )
+)`
+);
+histptr = hist.length;
+        </script>
+      </section>
+    </body>
+</html>
