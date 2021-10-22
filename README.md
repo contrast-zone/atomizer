@@ -12,7 +12,7 @@ The application is consisted of two panes. Left pane resembles input prompt for 
 
 ## testing the application
 
-Online link for testing the application is [here](contrast-zone.github.io/atomizer).
+Online link for testing the application is [here](contrast-zone.github.io/atomizer/).
 
 ## installing and running the application
 
