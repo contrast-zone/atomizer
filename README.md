@@ -10,7 +10,7 @@ In computer programming, an [S-expression](https://en.wikipedia.org/wiki/S-expre
 
 ## application specifics
 
-The application is consisted of two panes. Left pane resembles input prompt for entering s-expressions. Multiline input is obtained by holding `shift` while hitting `enter`. Standard pasting S-expressions from clipboard should also work fine. History of previously entered S-expressions is accessed by pressing up and down arrows. On hitting `enter` on its own in the input pane, if valid, inputted S-expression is sent to the right pane visualizer. Refer to built in application instructions for learning about navigating visualizer (the bottom-right questionmark).
+The application is consisted of two panes. Left pane resembles input prompt for entering S-expressions. Multiline input is obtained by holding `shift` while hitting `enter`. Standard pasting S-expressions from clipboard should also work fine. History of previously entered S-expressions is accessed by pressing up and down arrows. On hitting `enter` on its own in the input pane, if valid, inputted S-expression is sent to the right pane visualizer. Refer to built in application instructions for learning about navigating visualizer (the bottom-right questionmark).
 
 ## testing the application
 
