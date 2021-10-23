@@ -6,7 +6,7 @@
 
 ## about the project
 
-In computer programming, an [S-expression](https://en.wikipedia.org/wiki/S-expression) (or symbolic expression, abbreviated as sexpr or sexp) is an expression in a like-named notation for nested list (tree-structured) data. S-expressions were invented for and popularized by the programming language Lisp, which uses them for source code as well as data. *Atomizer* graphically displays s-expressions.
+In computer programming, an [S-expression](https://en.wikipedia.org/wiki/S-expression) (or symbolic expression, abbreviated as sexpr or sexp) is an expression in a like-named notation for nested list (tree-structured) data. S-expressions were invented for and popularized by the programming language Lisp, which uses them for source code as well as data. *Atomizer* graphically displays s-expressions in an interactive, fractally structured system of ovals.
 
 ## application specifics
 
