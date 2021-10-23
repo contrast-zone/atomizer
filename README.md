@@ -6,11 +6,11 @@
 
 ## about the project
 
-In computer programming, an [S-expression](https://en.wikipedia.org/wiki/S-expression) (or symbolic expression, abbreviated as sexpr or sexp) is an expression in a like-named notation for nested list (tree-structured) data. S-expressions were invented for and popularized by the programming language Lisp, which uses them for source code as well as data. *Atomizer* graphically displays s-expressions in an interactive, fractally structured system of ovals.
+In computer programming, an [S-expression](https://en.wikipedia.org/wiki/S-expression) (or symbolic expression, abbreviated as sexpr or sexp) is an expression in a like-named notation for nested list (tree-structured) data. S-expressions were invented for and popularized by the programming language Lisp, which uses them for source code as well as data. *Atomizer* graphically displays S-expressions in an interactive, fractally structured system of ovals.
 
 ## application specifics
 
-The application is consisted of two panes. Left pane resembles input prompt for entering s-expressions. Multiline input is obtained by holding `shift` while hitting `enter`. Standard pasting s-expressions from clipboard should also work fine. History of previously entered s-expressions is accessed by pressing up and down arrows. On hitting `enter` on its own in the input pane, if valid, inputted s-expression is sent to the right pane visualizer. Refer to built in application instructions for learning about navigating visualizer (the bottom-right questionmark).
+The application is consisted of two panes. Left pane resembles input prompt for entering s-expressions. Multiline input is obtained by holding `shift` while hitting `enter`. Standard pasting S-expressions from clipboard should also work fine. History of previously entered S-expressions is accessed by pressing up and down arrows. On hitting `enter` on its own in the input pane, if valid, inputted S-expression is sent to the right pane visualizer. Refer to built in application instructions for learning about navigating visualizer (the bottom-right questionmark).
 
 ## testing the application
 
