@@ -20,4 +20,4 @@ To install *Atomizer*, download this package, unzip it to a folder of your choic
 
 ## licensing information
 
-This project is licenced under [MIT License](LICENSE).
+This project is licensed under [MIT License](LICENSE).
